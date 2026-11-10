@@ -1,0 +1,134 @@
+{
+  "entities": {
+    "branding": {
+      "title": "Branding Configuration",
+      "description": "White label branding details and visual identity",
+      "type": "object",
+      "properties": {
+        "companyName": { "type": "string", "maxLength": 100 },
+        "tagline": { "type": "string", "maxLength": 200 },
+        "primaryColor": { "type": "string", "maxLength": 20 },
+        "secondaryColor": { "type": "string", "maxLength": 20 },
+        "accentColor": { "type": "string", "maxLength": 20 },
+        "fontFamily": { "type": "string", "maxLength": 50 },
+        "logoUrl": { "type": "string", "maxLength": 500 },
+        "faviconUrl": { "type": "string", "maxLength": 500 },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["companyName", "primaryColor"]
+    },
+    "product": {
+      "title": "Financial Product",
+      "description": "Loan or financial product offered on the portal",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 150 },
+        "category": { "type": "string", "maxLength": 50 },
+        "image": { "type": "string", "maxLength": 500 },
+        "shortDescription": { "type": "string", "maxLength": 300 },
+        "detailedDescription": { "type": "string", "maxLength": 3000 },
+        "loanAmount": { "type": "string", "maxLength": 100 },
+        "interestRate": { "type": "string", "maxLength": 100 },
+        "tenure": { "type": "string", "maxLength": 100 },
+        "applyButtonText": { "type": "string", "maxLength": 50 },
+        "displayOrder": { "type": "number" },
+        "isActive": { "type": "boolean" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "category", "shortDescription", "isActive"]
+    },
+    "category": {
+      "title": "Product Category",
+      "description": "Classification for financial products",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 100 },
+        "slug": { "type": "string", "maxLength": 100 },
+        "description": { "type": "string", "maxLength": 300 },
+        "displayOrder": { "type": "number" }
+      },
+      "required": ["id", "name", "slug"]
+    },
+    "banner": {
+      "title": "Hero Banner Slide",
+      "description": "Promotional desktop and mobile banner",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "title": { "type": "string", "maxLength": 150 },
+        "subtitle": { "type": "string", "maxLength": 250 },
+        "desktopImage": { "type": "string", "maxLength": 500 },
+        "mobileImage": { "type": "string", "maxLength": 500 },
+        "ctaText": { "type": "string", "maxLength": 50 },
+        "ctaLink": { "type": "string", "maxLength": 200 },
+        "isActive": { "type": "boolean" },
+        "displayOrder": { "type": "number" }
+      },
+      "required": ["id", "title", "desktopImage", "isActive"]
+    },
+    "page": {
+      "title": "CMS Page",
+      "description": "Standard or custom content page",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "title": { "type": "string", "maxLength": 150 },
+        "slug": { "type": "string", "maxLength": 100 },
+        "content": { "type": "string", "maxLength": 20000 },
+        "metaTitle": { "type": "string", "maxLength": 150 },
+        "metaDescription": { "type": "string", "maxLength": 300 },
+        "isPublished": { "type": "boolean" }
+      },
+      "required": ["id", "title", "slug", "isPublished"]
+    },
+    "enquiry": {
+      "title": "Customer Enquiry / Loan Application",
+      "description": "Submitted lead or loan application from public portal",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "fullName": { "type": "string", "maxLength": 120 },
+        "email": { "type": "string", "maxLength": 120 },
+        "phone": { "type": "string", "maxLength": 30 },
+        "productId": { "type": "string", "maxLength": 64 },
+        "productName": { "type": "string", "maxLength": 150 },
+        "requestedAmount": { "type": "number" },
+        "tenureMonths": { "type": "number" },
+        "employmentType": { "type": "string", "maxLength": 50 },
+        "monthlyIncome": { "type": "number" },
+        "status": { "type": "string", "maxLength": 30 },
+        "adminNotes": { "type": "string", "maxLength": 1000 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "fullName", "email", "phone", "status"]
+    }
+  },
+  "firestore": {
+    "/settings/branding": {
+      "schema": "branding",
+      "description": "Global website branding and styling configuration"
+    },
+    "/products/{productId}": {
+      "schema": "product",
+      "description": "Financial products catalog"
+    },
+    "/categories/{categoryId}": {
+      "schema": "category",
+      "description": "Product categories"
+    },
+    "/banners/{bannerId}": {
+      "schema": "banner",
+      "description": "Home hero and promotional banners"
+    },
+    "/pages/{pageId}": {
+      "schema": "page",
+      "description": "CMS web pages"
+    },
+    "/enquiries/{enquiryId}": {
+      "schema": "enquiry",
+      "description": "Public user loan inquiries and contact submissions"
+    }
+  }
+}

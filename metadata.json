@@ -1,0 +1,6 @@
+{
+  "name": "Blue Wien Website Builder",
+  "description": "Professional no-code white label website builder and management software with visual page editor, financial product manager, and responsive public portal.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

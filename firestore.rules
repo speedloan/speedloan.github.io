@@ -1,0 +1,77 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        (request.auth.token.email == 'readyloans.in@gmail.com' && request.auth.token.email_verified == true)
+      );
+    }
+
+    function isValidEnquiry(data) {
+      return data.fullName is string && data.fullName.size() > 0 && data.fullName.size() <= 120
+        && data.email is string && data.email.size() > 3 && data.email.size() <= 120
+        && data.phone is string && data.phone.size() >= 5 && data.phone.size() <= 30
+        && (data.status == 'new' || data.status == 'New');
+    }
+
+    // Default deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Admins metadata collection
+    match /admins/{adminId} {
+      allow read: if isSignedIn() && (request.auth.uid == adminId || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    // Settings collection (Branding, theme, header, footer, SEO, contact)
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Product Categories
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Financial Products
+    match /products/{productId} {
+      allow read: if resource.data.isActive == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Promotional Banners
+    match /banners/{bannerId} {
+      allow read: if resource.data.isActive == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // CMS Pages
+    match /pages/{pageId} {
+      allow read: if resource.data.isPublished == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Customer Inquiries & Loan Applications
+    match /enquiries/{enquiryId} {
+      // Anyone can submit an enquiry with validated payload
+      allow create: if isValidId(enquiryId) && isValidEnquiry(request.resource.data);
+      // Only authenticated admin can view, update status, and manage leads
+      allow read, update, delete: if isAdmin();
+    }
+  }
+}
